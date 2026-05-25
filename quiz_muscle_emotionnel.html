@@ -3,694 +3,1094 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>Quiz — Quel muscle émotionnel as-tu besoin de réveiller ?</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
 <style>
   :root {
     --vert: #3A6B3E;
-    --cognac: #B5652A;
+    --vert-light: #3A6B3E18;
+    --vert-mid: #3A6B3E40;
+    --terracotta: #A0522D;
+    --terra-light: #A0522D15;
+    --terra-mid: #A0522D50;
     --or: #D4A843;
-    --encre: #1C1A17;
-    --creme: #F5EFE4;
-    --creme2: #EDE6D6;
+    --cognac: #B5652A;
+    --ciel: #7EB8C4;
     --sauge: #7A9E6F;
+    --sable: #F5EFE4;
+    --creme: #F7F2EC;
+    --sombre: #1C1C1A;
+    --grey-text: #6B6560;
+    --grey-light: #E0D9D0;
+    --grey-mid: #B8B0A8;
   }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
   body {
     font-family: 'DM Sans', sans-serif;
-    background: var(--creme);
-    color: var(--encre);
+    background: var(--sable);
     min-height: 100vh;
+    color: var(--sombre);
+    overflow-x: hidden;
   }
-  .wrap {
-    max-width: 520px;
+
+  /* Texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 660px;
     margin: 0 auto;
     padding: 0 20px 80px;
-  }
-
-  /* HEADER */
-  .header {
-    background: var(--vert);
-    padding: 32px 20px 28px;
-    text-align: center;
     position: relative;
-    overflow: hidden;
-  }
-  .header::before {
-    content: '';
-    position: absolute;
-    top: -40px; right: -40px;
-    width: 180px; height: 180px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.06);
-  }
-  .header-badge {
-    display: inline-block;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--or);
-    background: rgba(212,168,67,0.15);
-    border: 1px solid rgba(212,168,67,0.35);
-    padding: 4px 14px;
-    border-radius: 20px;
-    margin-bottom: 14px;
-  }
-  .header-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(22px, 6vw, 28px);
-    font-weight: 500;
-    color: #fff;
-    line-height: 1.25;
-    margin-bottom: 10px;
-  }
-  .header-title em { color: var(--or); font-style: italic; }
-  .header-sub {
-    font-size: 13px;
-    color: rgba(255,255,255,0.7);
-    line-height: 1.6;
+    z-index: 1;
   }
 
-  /* PROGRESS */
-  .progress-wrap {
-    padding: 20px 0 8px;
+  /* ── SCREENS ── */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ── HEADER ── */
+  .top-bar {
+    background: var(--vert);
+    height: 5px;
+    width: 100%;
+    position: fixed;
+    top: 0; left: 0;
+    z-index: 100;
   }
-  .progress-top {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11.5px;
-    color: #8a7e73;
-    margin-bottom: 8px;
+
+  .brand-bar {
+    text-align: center;
+    padding: 28px 20px 0;
   }
-  .progress-bar {
-    height: 4px;
-    background: var(--creme2);
-    border-radius: 2px;
-    overflow: hidden;
+
+  .brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
+    font-weight: 300;
+    letter-spacing: 0.18em;
+    color: var(--vert);
+    text-transform: uppercase;
   }
-  .progress-fill {
-    height: 100%;
+
+  .brand-sep {
+    display: block;
+    width: 40px;
+    height: 1px;
     background: var(--or);
-    border-radius: 2px;
-    transition: width 0.4s ease;
+    margin: 8px auto 0;
   }
 
-  /* QUESTION */
-  .question-block {
-    padding: 24px 0 8px;
-    display: none;
-  }
-  .question-block.active { display: block; animation: fadeIn 0.4s ease; }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+  /* ── INTRO SCREEN ── */
+  .intro-hero {
+    text-align: center;
+    padding: 48px 0 36px;
   }
 
-  .question-num {
-    font-size: 10.5px;
-    font-weight: 500;
-    letter-spacing: 0.15em;
+  .intro-eyebrow {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--cognac);
-    margin-bottom: 10px;
-  }
-  .question-text {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(18px, 4.5vw, 22px);
+    color: var(--terracotta);
     font-weight: 500;
-    color: var(--encre);
-    line-height: 1.4;
     margin-bottom: 20px;
   }
 
-  /* CHOICES */
-  .choices { display: flex; flex-direction: column; gap: 10px; }
-  .choice {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 14px 16px;
-    background: #fff;
-    border: 1.5px solid rgba(181,101,42,0.15);
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 1px 6px rgba(28,26,23,0.04);
-  }
-  .choice:hover {
-    border-color: var(--cognac);
-    transform: translateX(3px);
-    box-shadow: 0 3px 14px rgba(28,26,23,0.09);
-  }
-  .choice.selected {
-    background: linear-gradient(135deg, #fff8f2 0%, #fef3e8 100%);
-    border-color: var(--cognac);
-    box-shadow: 0 3px 14px rgba(181,101,42,0.15);
-  }
-  .choice-letter {
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    background: var(--creme2);
-    border: 1px solid rgba(181,101,42,0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--cognac);
-    flex-shrink: 0;
-    margin-top: 1px;
-    transition: all 0.2s;
-  }
-  .choice.selected .choice-letter {
-    background: var(--cognac);
-    color: #fff;
-    border-color: var(--cognac);
-  }
-  .choice-text {
-    font-size: 13.5px;
-    color: #4a4540;
-    line-height: 1.55;
+  .intro-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 6vw, 3.2rem);
+    font-weight: 300;
+    line-height: 1.15;
+    color: var(--sombre);
+    margin-bottom: 12px;
   }
 
-  /* NAV */
-  .nav {
+  .intro-title em {
+    font-style: italic;
+    color: var(--terracotta);
+  }
+
+  .intro-subtitle {
+    font-size: 0.95rem;
+    color: var(--grey-text);
+    font-weight: 300;
+    line-height: 1.7;
+    max-width: 440px;
+    margin: 18px auto 0;
+  }
+
+  .intro-meta {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin: 32px 0;
+    flex-wrap: wrap;
+  }
+
+  .intro-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.8rem;
+    color: var(--grey-text);
+    font-weight: 300;
+  }
+
+  .intro-meta-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--or);
+  }
+
+  .btn-start {
+    display: inline-block;
+    background: var(--vert);
+    color: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    padding: 16px 44px;
+    border-radius: 100px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s;
+    margin-top: 8px;
+  }
+
+  .btn-start:hover {
+    background: #2d5431;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(58,107,62,0.25);
+  }
+
+  .intro-disclaimer {
+    font-size: 0.72rem;
+    color: var(--grey-mid);
+    margin-top: 14px;
+    font-style: italic;
+  }
+
+  /* Decorative card below intro */
+  .intro-card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px 32px;
+    border: 1px solid var(--grey-light);
+    margin-top: 8px;
+  }
+
+  .intro-card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: var(--sombre);
+    margin-bottom: 16px;
+  }
+
+  .intro-card ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .intro-card li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.85rem;
+    color: var(--grey-text);
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  .intro-card li::before {
+    content: '';
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--terracotta);
+    margin-top: 8px;
+    flex-shrink: 0;
+  }
+
+  /* ── PROGRESS BAR ── */
+  .progress-wrap {
+    padding: 28px 0 0;
+  }
+
+  .progress-info {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 24px;
-    gap: 12px;
-  }
-  .btn-back {
-    font-size: 13px;
-    color: #8a7e73;
-    background: none;
-    border: 1px solid rgba(181,101,42,0.2);
-    border-radius: 8px;
-    padding: 10px 18px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .btn-back:hover { border-color: var(--cognac); color: var(--cognac); }
-  .btn-next {
-    flex: 1;
-    max-width: 260px;
-    padding: 14px 20px;
-    background: var(--vert);
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 0 4px 16px rgba(58,107,62,0.25);
-  }
-  .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(58,107,62,0.3); }
-  .btn-next:disabled { background: #ccc; box-shadow: none; transform: none; cursor: not-allowed; }
-
-  /* RESULT */
-  .result-block {
-    display: none;
-    animation: fadeIn 0.5s ease;
-  }
-  .result-block.active { display: block; }
-
-  .result-header {
-    padding: 32px 24px 28px;
-    border-radius: 16px;
-    margin: 24px 0 20px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .result-emoji { font-size: 48px; margin-bottom: 12px; }
-  .result-label {
-    font-size: 10.5px;
-    font-weight: 500;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-    opacity: 0.75;
-  }
-  .result-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(22px, 6vw, 28px);
-    font-weight: 600;
-    line-height: 1.25;
-    margin-bottom: 8px;
-  }
-  .result-subtitle {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: clamp(15px, 4vw, 18px);
-    opacity: 0.8;
-    line-height: 1.4;
-  }
-
-  .result-body {
-    background: #fff;
-    border-radius: 14px;
-    padding: 22px 20px;
-    margin-bottom: 14px;
-    border: 1px solid rgba(181,101,42,0.15);
-    box-shadow: 0 2px 8px rgba(28,26,23,0.05);
-  }
-  .result-body-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--cognac);
-    margin-bottom: 10px;
-    letter-spacing: 0.02em;
-  }
-  .result-body p {
-    font-size: 13.5px;
-    color: #4a4540;
-    line-height: 1.7;
     margin-bottom: 10px;
   }
-  .result-body p:last-child { margin-bottom: 0; }
-  .result-body strong { color: var(--encre); }
 
-  .result-step {
-    background: linear-gradient(135deg, #eef4ee 0%, #e8f0e2 100%);
-    border: 1px solid rgba(58,107,62,0.2);
-    border-radius: 12px;
-    padding: 18px 20px;
-    margin-bottom: 14px;
-  }
-  .result-step-title {
-    font-size: 11px;
-    font-weight: 500;
+  .progress-label {
+    font-size: 0.72rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
+    color: var(--grey-text);
+    font-weight: 300;
+  }
+
+  .progress-count {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
     color: var(--vert);
+  }
+
+  .progress-track {
+    height: 3px;
+    background: var(--grey-light);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--vert), var(--sauge));
+    border-radius: 3px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ── QUESTION SCREEN ── */
+  .question-wrap {
+    padding: 32px 0;
+  }
+
+  .question-num {
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+
+  .question-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.4rem, 4vw, 1.9rem);
+    font-weight: 300;
+    line-height: 1.3;
+    color: var(--sombre);
+    margin-bottom: 10px;
+  }
+
+  .question-sub {
+    font-size: 0.85rem;
+    color: var(--grey-text);
+    font-weight: 300;
+    font-style: italic;
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .option-btn {
+    background: white;
+    border: 1.5px solid var(--grey-light);
+    border-radius: 12px;
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    width: 100%;
+  }
+
+  .option-btn:hover {
+    border-color: var(--vert);
+    background: var(--vert-light);
+    transform: translateX(3px);
+  }
+
+  .option-btn.selected {
+    border-color: var(--vert);
+    background: var(--vert-light);
+  }
+
+  .option-indicator {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid var(--grey-light);
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .option-btn.selected .option-indicator {
+    background: var(--vert);
+    border-color: var(--vert);
+  }
+
+  .option-btn.selected .option-indicator::after {
+    content: '';
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: white;
+  }
+
+  .option-text {
+    font-size: 0.9rem;
+    color: var(--sombre);
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  .option-text strong {
+    display: block;
+    font-weight: 500;
+    font-size: 0.95rem;
+    margin-bottom: 2px;
+  }
+
+  /* Body prompt */
+  .body-prompt {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 12px 16px;
+    background: var(--terra-light);
+    border-radius: 8px;
+    border-left: 3px solid var(--terracotta);
+  }
+
+  .body-prompt-text {
+    font-size: 0.82rem;
+    color: var(--terracotta);
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  /* Next button */
+  .btn-next {
+    margin-top: 24px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--sombre);
+    color: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 13px 32px;
+    border-radius: 100px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s;
+    opacity: 0;
+    transform: translateY(6px);
+    pointer-events: none;
+  }
+
+  .btn-next.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+  }
+
+  .btn-next:hover {
+    background: var(--vert);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(58,107,62,0.2);
+  }
+
+  .btn-next svg { transition: transform 0.2s; }
+  .btn-next:hover svg { transform: translateX(3px); }
+
+  /* Question fade */
+  .question-wrap {
+    animation: fadeSlideIn 0.35s ease forwards;
+  }
+
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── TRANSITION SCREEN ── */
+  .transition-screen {
+    text-align: center;
+    padding: 80px 20px;
+  }
+
+  .transition-spinner {
+    width: 48px; height: 48px;
+    border: 2px solid var(--grey-light);
+    border-top-color: var(--vert);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 24px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .transition-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 300;
+    color: var(--sombre);
+    font-style: italic;
+  }
+
+  /* ── RESULT SCREEN ── */
+  .result-header {
+    padding: 36px 0 28px;
+    text-align: center;
+  }
+
+  .result-eyebrow {
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--grey-text);
+    font-weight: 300;
+    margin-bottom: 16px;
+  }
+
+  .result-profile-badge {
+    display: inline-block;
+    padding: 6px 18px;
+    border-radius: 100px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .result-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    font-weight: 300;
+    line-height: 1.2;
+    color: var(--sombre);
     margin-bottom: 8px;
   }
-  .result-step p {
-    font-size: 13px;
-    color: #3a4a3a;
-    line-height: 1.65;
+
+  .result-title em { font-style: italic; }
+
+  .result-card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px 28px;
+    margin-bottom: 20px;
+    border: 1px solid var(--grey-light);
   }
 
-  .cta-result {
-    display: block;
-    width: 100%;
-    padding: 18px 20px;
-    background: var(--or);
-    border-radius: 12px;
-    text-align: center;
-    text-decoration: none;
-    font-size: 15px;
+  .result-card-section {
+    margin-bottom: 22px;
+  }
+
+  .result-card-section:last-child { margin-bottom: 0; }
+
+  .result-card-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
     font-weight: 500;
-    color: var(--encre);
-    margin-bottom: 12px;
-    box-shadow: 0 4px 16px rgba(212,168,67,0.35);
-    transition: all 0.2s;
+    margin-bottom: 8px;
   }
-  .cta-result:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212,168,67,0.4); }
 
-  .cta-secondary {
-    display: block;
-    width: 100%;
-    padding: 14px 20px;
-    background: transparent;
-    border: 1.5px solid rgba(58,107,62,0.3);
-    border-radius: 12px;
-    text-align: center;
-    text-decoration: none;
-    font-size: 13.5px;
-    color: var(--vert);
-    transition: all 0.2s;
-    margin-bottom: 24px;
+  .result-card-text {
+    font-size: 0.92rem;
+    color: var(--grey-text);
+    font-weight: 300;
+    line-height: 1.7;
   }
-  .cta-secondary:hover { border-color: var(--vert); background: rgba(58,107,62,0.05); }
 
-  .result-footer {
-    text-align: center;
+  .result-card-text strong {
+    color: var(--sombre);
+    font-weight: 500;
+  }
+
+  .result-quote {
     font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
     font-style: italic;
-    font-size: 13px;
-    color: #a09485;
-    padding-top: 16px;
-    border-top: 1px solid rgba(212,168,67,0.2);
+    font-weight: 300;
+    color: var(--sombre);
+    line-height: 1.6;
+    padding: 16px 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
   }
 
-  @media (max-width: 400px) {
-    .wrap { padding: 0 16px 60px; }
-    .header { padding: 28px 16px 24px; }
+  /* ── CAPTATION FORM ── */
+  .captation-card {
+    background: var(--vert);
+    border-radius: 16px;
+    padding: 32px 28px;
+    color: white;
+    text-align: center;
+  }
+
+  .captation-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 300;
+    margin-bottom: 8px;
+    font-style: italic;
+  }
+
+  .captation-sub {
+    font-size: 0.85rem;
+    opacity: 0.75;
+    font-weight: 300;
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+
+  .form-group {
+    margin-bottom: 12px;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 14px 18px;
+    border-radius: 10px;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.12);
+    color: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 300;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .form-input::placeholder { color: rgba(255,255,255,0.45); }
+  .form-input:focus { border-color: var(--or); background: rgba(255,255,255,0.18); }
+
+  .btn-submit {
+    width: 100%;
+    padding: 15px;
+    background: var(--or);
+    color: var(--sombre);
+    border: none;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: all 0.25s;
+    letter-spacing: 0.02em;
+  }
+
+  .btn-submit:hover {
+    background: #c49538;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(212,168,67,0.3);
+  }
+
+  .captation-privacy {
+    font-size: 0.7rem;
+    opacity: 0.45;
+    margin-top: 12px;
+    font-weight: 300;
+  }
+
+  /* ── THANK YOU ── */
+  .thankyou-screen {
+    text-align: center;
+    padding: 60px 20px;
+  }
+
+  .thankyou-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    display: block;
+    animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  @keyframes popIn {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .thankyou-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 300;
+    color: var(--sombre);
+    margin-bottom: 12px;
+  }
+
+  .thankyou-text {
+    font-size: 0.9rem;
+    color: var(--grey-text);
+    font-weight: 300;
+    line-height: 1.7;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  /* ── TAGLINE FOOTER ── */
+  .tagline-footer {
+    text-align: center;
+    padding: 32px 0 0;
+  }
+
+  .tagline-footer p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.88rem;
+    font-style: italic;
+    color: var(--grey-mid);
+  }
+
+  /* ── UTILS ── */
+  @media (max-width: 480px) {
+    .intro-card { padding: 20px; }
+    .result-card { padding: 22px 20px; }
+    .captation-card { padding: 26px 20px; }
   }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="header-badge">✦ Quiz gratuit</div>
-  <div class="header-title">Quel muscle émotionnel<br>as-tu besoin de <em>réveiller</em> ?</div>
-  <div class="header-sub">7 questions · réponse immédiate · pas d'analyse — juste ce que tu ressens</div>
-</div>
+<div class="top-bar"></div>
 
-<div class="wrap">
+<div class="container">
 
-  <div class="progress-wrap" id="progressWrap">
-    <div class="progress-top">
-      <span id="progressLabel">Question 1 sur 7</span>
-      <span id="progressPct">14%</span>
-    </div>
-    <div class="progress-bar">
-      <div class="progress-fill" id="progressFill" style="width:14%"></div>
-    </div>
+  <div class="brand-bar">
+    <div class="brand-name">L'Essence de Soi en Jeu</div>
+    <span class="brand-sep"></span>
   </div>
 
-  <!-- Q1 -->
-  <div class="question-block active" id="q1">
-    <div class="question-num">Question 1 · 7</div>
-    <div class="question-text">Le matin, quand tu penses à ta journée, qu'est-ce qui se passe en toi ?</div>
-    <div class="choices">
-      <div class="choice" onclick="select(1,1,'E')">
-        <div class="choice-letter">A</div>
-        <div class="choice-text">Une petite étincelle — quelque chose a envie de commencer</div>
-      </div>
-      <div class="choice" onclick="select(1,2,'J')">
-        <div class="choice-letter">B</div>
-        <div class="choice-text">Un vague, une grisaille — rien ne semble vraiment m'appeler</div>
-      </div>
-      <div class="choice" onclick="select(1,3,'D')">
-        <div class="choice-letter">C</div>
-        <div class="choice-text">Une liste de choses à faire, sans vraiment savoir par où commencer</div>
-      </div>
-      <div class="choice" onclick="select(1,4,'S')">
-        <div class="choice-letter">D</div>
-        <div class="choice-text">Un fond d'inquiétude — est-ce que je vais être à la hauteur ?</div>
-      </div>
-    </div>
-  </div>
+  <!-- ══ SCREEN 1 — INTRO ══ -->
+  <div id="screen-intro" class="screen active">
+    <div class="intro-hero">
+      <div class="intro-eyebrow">🎭 Quiz émotionnel</div>
+      <h1 class="intro-title">
+        Quel muscle émotionnel<br>
+        as-tu besoin de<br>
+        <em>réveiller ?</em>
+      </h1>
+      <p class="intro-subtitle">
+        7 questions. Pas de bonnes réponses.<br>
+        Juste toi — et ce que tu ressens vraiment.
+      </p>
 
-  <!-- Q2 -->
-  <div class="question-block" id="q2">
-    <div class="question-num">Question 2 · 7</div>
-    <div class="question-text">Quand quelque chose te plaît vraiment, comment tu le vis ?</div>
-    <div class="choices">
-      <div class="choice" onclick="select(2,1,'E')">
-        <div class="choice-letter">A</div>
-        <div class="choice-text">J'ai envie de tout partager, ça déborde — je m'anime facilement</div>
+      <div class="intro-meta">
+        <div class="intro-meta-item">
+          <div class="intro-meta-dot"></div>
+          <span>3 minutes</span>
+        </div>
+        <div class="intro-meta-item">
+          <div class="intro-meta-dot"></div>
+          <span>7 questions</span>
+        </div>
+        <div class="intro-meta-item">
+          <div class="intro-meta-dot"></div>
+          <span>4 profils</span>
+        </div>
       </div>
-      <div class="choice" onclick="select(2,2,'J')">
-        <div class="choice-letter">B</div>
-        <div class="choice-text">Je ressens quelque chose, mais c'est vite étouffé, je n'ose pas trop le montrer</div>
-      </div>
-      <div class="choice" onclick="select(2,3,'D')">
-        <div class="choice-letter">C</div>
-        <div class="choice-text">Je note mentalement, je planifie comment faire plus de ça</div>
-      </div>
-      <div class="choice" onclick="select(2,4,'S')">
-        <div class="choice-letter">D</div>
-        <div class="choice-text">Je me demande si j'ai vraiment le droit de me réjouir autant</div>
-      </div>
+
+      <button class="btn-start" onclick="startQuiz()">Commencer le quiz</button>
+      <p class="intro-disclaimer">Réponds sans réfléchir — ton premier élan est le bon.</p>
+    </div>
+
+    <div class="intro-card">
+      <p class="intro-card-title">Ce quiz est fait pour toi si…</p>
+      <ul>
+        <li>Tu fonctionnes — mais tu ne ressens plus grand chose de vrai</li>
+        <li>Tu as essayé le développement personnel, mais quelque chose résiste encore</li>
+        <li>Tu sens qu'il y a quelque chose à réveiller en toi, mais tu ne sais pas quoi</li>
+        <li>Tu attends… quelque chose. Sans savoir exactement quoi.</li>
+      </ul>
+    </div>
+
+    <div class="tagline-footer">
+      <p>Kiffe ta vie avant qu'elle ne te quitte.</p>
     </div>
   </div>
 
-  <!-- Q3 -->
-  <div class="question-block" id="q3">
-    <div class="question-num">Question 3 · 7</div>
-    <div class="question-text">Face à un obstacle, qu'est-ce qui se passe d'abord dans ton corps ?</div>
-    <div class="choices">
-      <div class="choice" onclick="select(3,1,'D')">
-        <div class="choice-letter">A</div>
-        <div class="choice-text">Une contraction — comme si quelque chose se bloquait, hésite à avancer</div>
+  <!-- ══ SCREEN 2 — QUESTIONS ══ -->
+  <div id="screen-quiz" class="screen">
+    <div class="progress-wrap">
+      <div class="progress-info">
+        <span class="progress-label">Ta progression</span>
+        <span class="progress-count" id="progress-count">1 / 7</span>
       </div>
-      <div class="choice" onclick="select(3,2,'E')">
-        <div class="choice-letter">B</div>
-        <div class="choice-text">Un regain d'énergie — j'ai envie de trouver une solution</div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
       </div>
-      <div class="choice" onclick="select(3,3,'J')">
-        <div class="choice-letter">C</div>
-        <div class="choice-text">Une lassitude — encore un truc qui ne marche pas</div>
-      </div>
-      <div class="choice" onclick="select(3,4,'S')">
-        <div class="choice-letter">D</div>
-        <div class="choice-text">Une peur diffuse — et si je n'y arrivais pas ?</div>
-      </div>
+    </div>
+
+    <div id="question-container"></div>
+  </div>
+
+  <!-- ══ SCREEN 3 — TRANSITION ══ -->
+  <div id="screen-transition" class="screen">
+    <div class="transition-screen">
+      <div class="transition-spinner"></div>
+      <p class="transition-text">Ton profil se révèle…</p>
     </div>
   </div>
 
-  <!-- Q4 -->
-  <div class="question-block" id="q4">
-    <div class="question-num">Question 4 · 7</div>
-    <div class="question-text">Quand quelqu'un te fait un compliment sincère, tu…</div>
-    <div class="choices">
-      <div class="choice" onclick="select(4,1,'S')">
-        <div class="choice-letter">A</div>
-        <div class="choice-text">Le minimises ou le détournes — "Oh c'est rien, n'importe qui aurait fait pareil"</div>
-      </div>
-      <div class="choice" onclick="select(4,2,'J')">
-        <div class="choice-letter">B</div>
-        <div class="choice-text">Le reçois avec un sourire, mais tu n'y crois pas vraiment</div>
-      </div>
-      <div class="choice" onclick="select(4,3,'D')">
-        <div class="choice-letter">C</div>
-        <div class="choice-text">L'enregistres et tu continues — tu as encore beaucoup à faire</div>
-      </div>
-      <div class="choice" onclick="select(4,4,'E')">
-        <div class="choice-letter">D</div>
-        <div class="choice-text">Le reçois pleinement — ça t'encourage à aller encore plus loin</div>
-      </div>
+  <!-- ══ SCREEN 4 — RESULT ══ -->
+  <div id="screen-result" class="screen">
+    <div id="result-content"></div>
+  </div>
+
+  <!-- ══ SCREEN 5 — THANK YOU ══ -->
+  <div id="screen-thankyou" class="screen">
+    <div class="thankyou-screen">
+      <span class="thankyou-icon">🌱</span>
+      <h2 class="thankyou-title">C'est parti.</h2>
+      <p class="thankyou-text">
+        Ton profil complet et ton audio de 5 minutes arrivent dans ta boîte mail.<br><br>
+        Vérifie tes spams si tu ne le reçois pas dans les prochaines minutes.
+      </p>
+    </div>
+    <div class="tagline-footer">
+      <p>Kiffe ta vie avant qu'elle ne te quitte. 🎭</p>
     </div>
   </div>
-
-  <!-- Q5 -->
-  <div class="question-block" id="q5">
-    <div class="question-num">Question 5 · 7</div>
-    <div class="question-text">Ce soir, après une longue journée, qu'est-ce qui te ressourcerait vraiment ?</div>
-    <div class="choices">
-      <div class="choice" onclick="select(5,1,'E')">
-        <div class="choice-letter">A</div>
-        <div class="choice-text">Faire quelque chose qui me passionne — j'ai besoin de m'y mettre</div>
-      </div>
-      <div class="choice" onclick="select(5,2,'J')">
-        <div class="choice-letter">B</div>
-        <div class="choice-text">Rire, danser, quelque chose de léger — j'en ai tellement besoin</div>
-      </div>
-      <div class="choice" onclick="select(5,3,'D')">
-        <div class="choice-letter">C</div>
-        <div class="choice-text">Avancer sur un projet qui me tient à cœur — sentir que je progresse</div>
-      </div>
-      <div class="choice" onclick="select(5,4,'S')">
-        <div class="choice-letter">D</div>
-        <div class="choice-text">Être seule, au calme — me retrouver sans avoir à me justifier</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Q6 -->
-  <div class="question-block" id="q6">
-    <div class="question-num">Question 6 · 7</div>
-    <div class="question-text">Si tu devais décrire ton rapport à toi-même en ce moment, ce serait…</div>
-    <div class="choices">
-      <div class="choice" onclick="select(6,1,'S')">
-        <div class="choice-letter">A</div>
-        <div class="choice-text">Exigeante — je ne me pardonne pas facilement les erreurs</div>
-      </div>
-      <div class="choice" onclick="select(6,2,'J')">
-        <div class="choice-letter">B</div>
-        <div class="choice-text">Distante — je m'observe sans vraiment me sentir</div>
-      </div>
-      <div class="choice" onclick="select(6,3,'D')">
-        <div class="choice-letter">C</div>
-        <div class="choice-text">En attente — je sais ce que je veux, mais quelque chose résiste</div>
-      </div>
-      <div class="choice" onclick="select(6,4,'E')">
-        <div class="choice-letter">D</div>
-        <div class="choice-text">En mouvement — j'ai des envies, mais elles manquent parfois de carburant</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Q7 -->
-  <div class="question-block" id="q7">
-    <div class="question-num">Question 7 · 7</div>
-    <div class="question-text">La phrase qui résonne le plus en toi en ce moment ?</div>
-    <div class="choices">
-      <div class="choice" onclick="select(7,1,'E')">
-        <div class="choice-letter">A</div>
-        <div class="choice-text">"Je veux retrouver ce feu — cette envie de me lever le matin avec hâte"</div>
-      </div>
-      <div class="choice" onclick="select(7,2,'J')">
-        <div class="choice-letter">B</div>
-        <div class="choice-text">"Je voudrais juste me sentir légère — rire sans raison, être là vraiment"</div>
-      </div>
-      <div class="choice" onclick="select(7,3,'D')">
-        <div class="choice-letter">C</div>
-        <div class="choice-text">"Je sais ce que je veux. Mais entre savoir et faire, il y a un gouffre"</div>
-      </div>
-      <div class="choice" onclick="select(7,4,'S')">
-        <div class="choice-letter">D</div>
-        <div class="choice-text">"J'ai besoin de me sentir légitime — d'occuper ma place sans m'excuser"</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- NAV -->
-  <div class="nav" id="navButtons">
-    <button class="btn-back" id="btnBack" onclick="goBack()" style="display:none;">← Retour</button>
-    <button class="btn-next" id="btnNext" onclick="goNext()" disabled>Continuer →</button>
-  </div>
-
-  <!-- RESULTS -->
-  <div class="result-block" id="results"></div>
 
 </div>
 
 <script>
-  const answers = {};
-  let current = 1;
-  const total = 7;
+// ── DATA ──
 
-  const profiles = {
-    E: {
-      emoji: '🔥',
-      label: 'Muscle endormi',
-      title: "Ton enthousiasme\ns'est mis en veille",
-      subtitle: "Il est là — juste en attente d'une étincelle",
-      bg: 'linear-gradient(135deg, #3A6B3E 0%, #2d5230 100%)',
-      color: '#fff',
-      labelColor: 'rgba(212,168,67,0.9)',
-      portrait: "Tu as de l'élan — parfois même beaucoup. Mais quelque chose l'étouffe avant qu'il ne prenne vraiment feu. Tu te lèves le matin sans cette hâte que tu aimerais ressentir. Pas d'épuisement profond — juste un feu qui brûle trop bas.",
-      why: "L'enthousiasme n'est pas une humeur. C'est un muscle — une énergie qui circule dans le corps quand tu es alignée avec ce qui compte vraiment pour toi. Quand il dort, c'est souvent parce que tu fais beaucoup de choses qui ne te nourrissent pas vraiment.",
-      first_step: "<strong>Rappelle-toi la dernière fois que tu as perdu la notion du temps.</strong> Qu'est-ce que tu faisais ? Pose une main sur ton sternum, respire, et reviens à cette sensation. C'est là que vit ton enthousiasme.",
-    },
-    J: {
-      emoji: '✨',
-      label: 'Muscle endormi',
-      title: "Ta joie s'est\nperdue en chemin",
-      subtitle: "Elle n'a pas disparu — elle attend d'être retrouvée",
-      bg: 'linear-gradient(135deg, #D4A843 0%, #b88e2f 100%)',
-      color: '#1C1A17',
-      labelColor: '#3A6B3E',
-      portrait: "Tu fonctionnes. Tu gères. Et pourtant, quelque chose de léger manque. La joie spontanée — celle qui n'a pas besoin de raison — s'est effacée doucement. Tu te souviens de la ressentir, mais tu ne sais plus comment y revenir.",
-      why: "La joie n'est pas un état mental. C'est une vibration dans le corps — une légèreté physique qui surgit quand tu es présente à ce qui est beau, maintenant. Elle s'endort quand tu es trop dans ta tête, trop occupée à gérer.",
-      first_step: "<strong>Fais quelque chose d'inutile et de plaisant dans les prochaines 24 heures.</strong> Chanter, danser seule, regarder le ciel. Sans objectif. Juste pour ça. C'est la première adresse que tu laisses à ta joie pour te retrouver.",
-    },
-    D: {
-      emoji: '⚡',
-      label: 'Muscle endormi',
-      title: "Ta détermination\ncherche son appui",
-      subtitle: "Tu sais où tu veux aller — mais le pas manque",
-      bg: 'linear-gradient(135deg, #B5652A 0%, #8f4e20 100%)',
-      color: '#fff',
-      labelColor: 'rgba(212,168,67,0.9)',
-      portrait: "Tu vois clairement ce que tu veux. Tu l'as même planifié. Mais entre l'intention et l'action, quelque chose résiste. Ce n'est pas le manque d'envie — c'est comme si le corps n'avait pas reçu le signal de départ.",
-      why: "La détermination n'est pas une question de volonté. C'est une énergie physique — une certitude qui se sent dans les jambes, le ventre, le souffle. Quand elle vacille, c'est souvent parce qu'elle cherche un ancrage dans le corps, pas dans la tête.",
-      first_step: "<strong>Prends une décision aujourd'hui — même petite — et honore-la immédiatement.</strong> Pas demain. Maintenant. La détermination se construit par des actes concrets, pas par des convictions.",
-    },
-    S: {
-      emoji: '🌿',
-      label: 'Muscle endormi',
-      title: "Ton estime de toi\ns'est effacée doucement",
-      subtitle: "Tu as tout ce qu'il faut — tu l'as juste oublié",
-      bg: 'linear-gradient(135deg, #7A9E6F 0%, #5a7d50 100%)',
-      color: '#fff',
-      labelColor: 'rgba(212,168,67,0.9)',
-      portrait: "Tu fais, tu donnes, tu t'adaptes — souvent au détriment de toi-même. Quelque part, tu cherches la validation que tu ne t'accordes pas. Ce n'est pas un manque de caractère — c'est une croyance ancienne, inscrite dans le corps.",
-      why: "L'estime de soi n'est pas une conviction mentale. C'est une sensation physique — celle d'avoir le droit d'occuper de l'espace, d'exister pleinement, sans s'excuser. Quand elle s'efface, c'est le corps qui a appris à se faire petit.",
-      first_step: "<strong>Tiens-toi droite et prends plus de place qu'à l'habitude.</strong> Élargis tes épaules. Respire dans ta poitrine. Remarque le malaise — puis reste là quand même. C'est l'estime de soi qui commence.",
-    }
-  };
-
-  function select(q, choice, profile) {
-    const block = document.getElementById('q' + q);
-    block.querySelectorAll('.choice').forEach(c => c.classList.remove('selected'));
-    block.querySelectorAll('.choice')[choice - 1].classList.add('selected');
-    answers[q] = profile;
-    document.getElementById('btnNext').disabled = false;
+const questions = [
+  {
+    num: 1,
+    text: "Quand tu te réveilles le matin, qu'est-ce qui domine ?",
+    sub: "Ferme les yeux une seconde avant de répondre.",
+    body: "🫀 Remarque ce qui se passe dans ton corps en lisant chaque réponse.",
+    options: [
+      { text: "Un vide. L'élan n'est plus là.", text2: "Je fonctionne — mais sans étincelle.", scores: [3,0,0,0] },
+      { text: "Une tristesse sourde.", text2: "Comme si la légèreté avait disparu.", scores: [0,3,0,0] },
+      { text: "Une hésitation.", text2: "Je ne sais plus vraiment ce que je veux.", scores: [0,0,3,0] },
+      { text: "Un doute.", text2: "Est-ce que j'ai vraiment de la valeur ?", scores: [0,0,0,3] },
+    ]
+  },
+  {
+    num: 2,
+    text: "Quelqu'un te propose quelque chose qui t'aurait plu autrefois. Tu ressens…",
+    sub: "Ton premier réflexe — avant que le mental intervienne.",
+    body: "🫀 Écoute ce qui monte dans ton corps.",
+    options: [
+      { text: "Rien. Plat.", text2: "L'envie ne monte plus comme avant.", scores: [3,0,0,0] },
+      { text: "Un sourire forcé.", text2: "Je fais semblant d'être enthousiaste.", scores: [0,3,0,0] },
+      { text: "Du recul.", text2: "Je ne sais pas si j'en suis capable.", scores: [0,0,2,1] },
+      { text: "De la méfiance.", text2: "Et si ça ne marchait pas pour moi ?", scores: [0,0,0,3] },
+    ]
+  },
+  {
+    num: 3,
+    text: "Quand tu penses à ce que tu veux vraiment pour toi…",
+    sub: "Pas pour les autres. Pour toi.",
+    body: "🫀 Pose une main sur le cœur en répondant.",
+    options: [
+      { text: "Une image floue.", text2: "L'élan est là quelque part — mais je ne le touche plus.", scores: [3,0,0,0] },
+      { text: "De la nostalgie.", text2: "Je me souviens d'une époque où j'étais légère.", scores: [0,3,0,0] },
+      { text: "De l'hésitation.", text2: "Je veux — mais je n'ose pas vraiment avancer.", scores: [0,0,3,0] },
+      { text: "Du vide.", text2: "Je ne sais plus si je mérite ce que je veux.", scores: [0,0,0,3] },
+    ]
+  },
+  {
+    num: 4,
+    text: "La dernière fois que tu t'es sentie vraiment vivante, c'était…",
+    sub: "Pas une obligation. Un vrai moment à toi.",
+    body: "🫀 Remarque si un souvenir monte spontanément.",
+    options: [
+      { text: "Il y a très longtemps.", text2: "L'étincelle s'est éteinte sans que je m'en rende compte.", scores: [3,0,0,0] },
+      { text: "Dans un éclat de rire.", text2: "Ces moments sont devenus rares.", scores: [0,3,0,0] },
+      { text: "Quand j'ai osé quelque chose.", text2: "Mais c'est de plus en plus difficile d'oser.", scores: [0,0,3,0] },
+      { text: "Quand quelqu'un m'a reconnue.", text2: "J'ai besoin du regard des autres pour me sentir exister.", scores: [0,0,0,3] },
+    ]
+  },
+  {
+    num: 5,
+    text: "Face à quelque chose que tu désires vraiment — tu fais quoi ?",
+    sub: "Ton premier réflexe. Honnêtement.",
+    body: "🫀 Ne filtre pas.",
+    options: [
+      { text: "Je reporte.", text2: "L'envie s'évanouit avant que j'agisse.", scores: [3,0,0,0] },
+      { text: "Je minimise.", text2: "De toute façon, ça ne m'apportera pas vraiment de joie.", scores: [0,3,0,0] },
+      { text: "Je doute.", text2: "Est-ce que je suis vraiment capable de ça ?", scores: [0,0,2,1] },
+      { text: "J'attends la permission.", text2: "Quelqu'un doit me dire que c'est ok.", scores: [0,0,0,3] },
+    ]
+  },
+  {
+    num: 6,
+    text: "Quand tu t'accordes du temps pour toi — qu'est-ce qui se passe ?",
+    sub: "Si ça arrive.",
+    body: "🫀 Sens la réponse dans ton corps.",
+    options: [
+      { text: "Vide.", text2: "Je ne sais plus comment profiter.", scores: [3,0,0,0] },
+      { text: "Tristesse.",  text2: "Je n'arrive plus à ressentir de vraie légèreté.", scores: [0,3,0,0] },
+      { text: "Agitation.", text2: "Je n'arrive pas à me poser — il faudrait que je fasse quelque chose.", scores: [0,0,3,0] },
+      { text: "Malaise.", text2: "Je ne me sens pas légitime de prendre ce temps.", scores: [0,0,0,3] },
+    ]
+  },
+  {
+    num: 7,
+    text: "Si ton corps pouvait parler — il te dirait…",
+    sub: "Laisse venir la phrase sans la censurer.",
+    body: "🫀 La première chose qui monte.",
+    options: [
+      { text: "« Réveille-toi. »", text2: "Il y a encore de la vie là-dedans.", scores: [3,0,0,0] },
+      { text: "« Ris encore. »", text2: "Tu as oublié ce que c'est d'être légère.", scores: [0,3,0,0] },
+      { text: "« Avance. »", text2: "Tu sais ce que tu veux — arrête d'attendre.", scores: [0,0,3,0] },
+      { text: "« Tu as de la valeur. »", text2: "Tu n'as pas à le prouver en permanence.", scores: [0,0,0,3] },
+    ]
   }
+];
 
-  function goNext() {
-    if (current < total) {
-      document.getElementById('q' + current).classList.remove('active');
-      current++;
-      document.getElementById('q' + current).classList.add('active');
-      document.getElementById('btnNext').disabled = !answers[current];
-      document.getElementById('btnBack').style.display = 'block';
-      if (current === total) document.getElementById('btnNext').textContent = 'Voir mon résultat →';
-      updateProgress();
-    } else {
-      showResult();
-    }
+const profiles = [
+  {
+    id: 0,
+    badge: "Profil Enthousiasme",
+    badgeColor: "#A0522D",
+    badgeBg: "#A0522D18",
+    title: "Ton enthousiasme<br>s'est mis <em>en veille</em>",
+    quote: "« Il y a encore de la vie là-dedans — elle attend juste qu'on lui fasse de la place. »",
+    quoteBg: "#A0522D10",
+    labelColor: "#A0522D",
+    portrait: "Tu fonctionnes. Tu avances. Tu coches les cases. Mais quelque chose s'est éteint en chemin — cet élan que tu avais autrefois, cette étincelle qui faisait que les matins avaient du sens. Ce n'est pas une panne. C'est un muscle qui dort.",
+    why: "L'enthousiasme n'est pas une émotion capricieuse. C'est une énergie physique, cellulaire. Quand elle disparaît, ce n'est pas parce que tu es cassée — c'est parce que quelque chose l'a étouffée progressivement. Et ce qui a été étouffé peut être réveillé.",
+    first_step: "Pose une main sur ton sternum. Respire. Et demande-toi : <strong>quand as-tu ressenti de l'enthousiasme pour la dernière fois ?</strong> Pas pour analyser — juste pour te souvenir que cette sensation existe encore.",
+    magnet: "le carnet de bord 7 jours pour réveiller ton enthousiasme",
+    magnet_detail: "7 questions corporelles. 7 matins pour toi. Un espace pour sentir ce qui se réveille.",
+  },
+  {
+    id: 1,
+    badge: "Profil Joie",
+    badgeColor: "#3A6B3E",
+    badgeBg: "#3A6B3E18",
+    title: "Ta joie s'est<br><em>perdue en chemin</em>",
+    quote: "« La joie n'a pas disparu. Elle attend que tu lui redonnes de l'espace. »",
+    quoteBg: "#3A6B3E10",
+    labelColor: "#3A6B3E",
+    portrait: "Tu souris — mais ce n'est plus tout à fait vrai. La légèreté, les éclats de rire spontanés, les petits moments qui font que la vie a du goût… tout ça s'est estompé. Tu continues, mais quelque chose d'essentiel manque.",
+    why: "La joie n'est pas un état d'esprit — c'est une vibration corporelle. Quand elle s'efface, c'est souvent parce que la vie a imposé trop de sérieux, trop de responsabilités, trop de 'il faut'. Le corps a oublié ce que c'est d'être léger.",
+    first_step: "<strong>Aujourd'hui, rappelle-toi une chose qui te faisait rire vraiment.</strong> Pas un souvenir nostalgique — une sensation. Laisse ton corps se souvenir avant que ton mental intervienne.",
+    magnet: "l'audio de 5 minutes pour réveiller ta joie",
+    magnet_detail: "Une expérience corporelle courte, pour retrouver la légèreté que tu as mise de côté.",
+  },
+  {
+    id: 2,
+    badge: "Profil Détermination",
+    badgeColor: "#7EB8C4",
+    badgeBg: "#7EB8C415",
+    title: "Ta détermination<br>cherche <em>son appui</em>",
+    quote: "« Tu sais ce que tu veux. Tu cherches juste le sol sous tes pieds pour avancer. »",
+    quoteBg: "#7EB8C415",
+    labelColor: "#5A9BAA",
+    portrait: "Tu vois ce que tu veux. Tu sais où tu veux aller. Mais quelque chose hésite, recule, reporte. Ce n'est pas un manque de volonté — c'est une détermination qui n'a pas encore trouvé son ancrage corporel.",
+    why: "La détermination vraie ne vient pas du mental — elle vient du corps. Quand les jambes tremblent, quand le ventre se serre, le mental peut dire 'go' autant qu'il veut. C'est le corps qui doit sentir qu'il peut avancer.",
+    first_step: "<strong>Tiens-toi debout, pieds bien ancrés dans le sol.</strong> Sens le contact. Respire. Et dis à voix haute : 'Je suis là.' C'est le premier geste de la détermination — pas une décision, une sensation.",
+    magnet: "l'audio de 5 minutes pour ancrer ta détermination",
+    magnet_detail: "Un rituel corporel court pour sentir la différence entre hésiter et choisir.",
+  },
+  {
+    id: 3,
+    badge: "Profil Estime de soi",
+    badgeColor: "#8B7BB5",
+    badgeBg: "#8B7BB515",
+    title: "Ton estime de toi<br>s'est <em>effacée doucement</em>",
+    quote: "« Tu n'as pas à prouver ta valeur. Tu l'as déjà. »",
+    quoteBg: "#8B7BB510",
+    labelColor: "#7B6BA5",
+    portrait: "Tu fais, tu donnes, tu t'adaptes — souvent au détriment de toi-même. Quelque part, tu cherches la validation que tu ne t'accordes pas. Ce n'est pas un manque de caractère — c'est une croyance ancienne, inscrite dans le corps, qui dit que tu dois mériter ta place.",
+    why: "L'estime de soi n'est pas une conviction mentale. C'est une sensation physique — celle d'avoir le droit d'occuper de l'espace, d'exister pleinement, sans s'excuser. Quand elle s'efface, c'est le corps qui a appris à se faire petit.",
+    first_step: "<strong>Tiens-toi droite et prends plus de place qu'à l'habitude.</strong> Élargis tes épaules. Respire dans ta poitrine. Remarque le malaise — puis reste là quand même. C'est l'estime de soi qui commence.",
+    magnet: "l'audio de 5 minutes pour retrouver ton estime",
+    magnet_detail: "Une expérience corporelle pour sentir que tu as le droit d'être là — pleinement.",
   }
+];
 
-  function goBack() {
-    if (current > 1) {
-      document.getElementById('q' + current).classList.remove('active');
-      current--;
-      document.getElementById('q' + current).classList.add('active');
-      document.getElementById('btnNext').disabled = false;
-      document.getElementById('btnNext').textContent = current === total ? 'Voir mon résultat →' : 'Continuer →';
-      if (current === 1) document.getElementById('btnBack').style.display = 'none';
-      updateProgress();
-    }
-  }
+// ── STATE ──
+let currentQ = 0;
+let scores = [0, 0, 0, 0]; // [enthousiasme, charge, sérénité, permission]
+let selectedOption = null;
 
-  function updateProgress() {
-    const pct = Math.round((current / total) * 100);
-    document.getElementById('progressFill').style.width = pct + '%';
-    document.getElementById('progressLabel').textContent = 'Question ' + current + ' sur ' + total;
-    document.getElementById('progressPct').textContent = pct + '%';
-  }
+// ── FUNCTIONS ──
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
 
-  function showResult() {
-    // Count scores
-    const scores = { E: 0, J: 0, D: 0, S: 0 };
-    Object.values(answers).forEach(a => scores[a]++);
-    const dominant = Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
-    const p = profiles[dominant];
+function startQuiz() {
+  showScreen('screen-quiz');
+  renderQuestion();
+}
 
-    document.getElementById('progressWrap').style.display = 'none';
-    document.querySelectorAll('.question-block').forEach(b => b.style.display = 'none');
-    document.getElementById('navButtons').style.display = 'none';
+function renderQuestion() {
+  const q = questions[currentQ];
+  const pct = (currentQ / questions.length) * 100;
 
-    const titleLines = p.title.split('\n');
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-count').textContent = `${currentQ + 1} / ${questions.length}`;
 
-    document.getElementById('results').innerHTML = `
-      <div class="result-header" style="background:${p.bg};color:${p.color};">
-        <div class="result-emoji">${p.emoji}</div>
-        <div class="result-label" style="color:${p.labelColor};">${p.label}</div>
-        <div class="result-title" style="color:${p.color};">${titleLines[0]}<br>${titleLines[1]}</div>
-        <div class="result-subtitle" style="color:${p.color};">${p.subtitle}</div>
+  selectedOption = null;
+
+  const html = `
+    <div class="question-wrap">
+      <div class="question-num">Question ${q.num} sur ${questions.length}</div>
+      <h2 class="question-text">${q.text}</h2>
+      <p class="question-sub">${q.sub}</p>
+      <div class="body-prompt">
+        <span class="body-prompt-text">${q.body}</span>
       </div>
-
-      <div class="result-body">
-        <div class="result-body-title">Ce que ça dit de toi</div>
-        <p>${p.portrait}</p>
-        <p>${p.why}</p>
+      <div class="options">
+        ${q.options.map((opt, i) => `
+          <button class="option-btn" onclick="selectOption(${i})" id="opt-${i}">
+            <div class="option-indicator"></div>
+            <div class="option-text">
+              <strong>${opt.text}</strong>
+              ${opt.text2}
+            </div>
+          </button>
+        `).join('')}
       </div>
+      <button class="btn-next" id="btn-next" onclick="nextQuestion()">
+        ${currentQ < questions.length - 1 ? 'Question suivante' : 'Voir mon profil'}
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  `;
 
-      <div class="result-step">
-        <div class="result-step-title">✦ Premier pas concret</div>
-        <p>${p.first_step}</p>
-      </div>
+  document.getElementById('question-container').innerHTML = html;
+}
 
-      <a class="cta-result" href="LIEN_FORMATION">
-        Découvrir la formation L'Essence de Soi en Jeu →
-      </a>
-      <a class="cta-secondary" href="LIEN_ATELIER_GRATUIT">
-        Rejoindre l'atelier gratuit du mois
-      </a>
+function selectOption(i) {
+  selectedOption = i;
+  document.querySelectorAll('.option-btn').forEach((btn, idx) => {
+    btn.classList.toggle('selected', idx === i);
+  });
+  const btn = document.getElementById('btn-next');
+  btn.classList.add('visible');
+}
 
-      <div class="result-footer">
-        Kiffe ta vie avant qu'elle ne te quitte.<br>
-        <span style="font-style:normal;font-size:11px;color:#bbb;">© Chantal Brochard · L'Essence de Soi en Jeu</span>
-      </div>
-    `;
+function nextQuestion() {
+  if (selectedOption === null) return;
 
-    document.getElementById('results').classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Add scores
+  const q = questions[currentQ];
+  q.options[selectedOption].scores.forEach((s, i) => { scores[i] += s; });
+
+  currentQ++;
+
+  if (currentQ >= questions.length) {
+    showTransition();
+  } else {
+    renderQuestion();
   }
+}
+
+function showTransition() {
+  showScreen('screen-transition');
+  setTimeout(showResult, 2200);
+}
+
+function showResult() {
+  // Find dominant profile
+  const maxScore = Math.max(...scores);
+  const profileIdx = scores.indexOf(maxScore);
+  const profile = profiles[profileIdx];
+
+  const html = `
+    <div class="result-header">
+      <div class="result-eyebrow">Ton profil</div>
+      <div class="result-profile-badge" style="background:${profile.badgeBg}; color:${profile.badgeColor}; border: 1px solid ${profile.badgeColor}40">
+        ${profile.badge}
+      </div>
+      <h2 class="result-title">${profile.title}</h2>
+    </div>
+
+    <div class="result-quote" style="background:${profile.quoteBg}; border-left: 3px solid ${profile.badgeColor}">
+      ${profile.quote}
+    </div>
+
+    <div class="result-card">
+      <div class="result-card-section">
+        <div class="result-card-label" style="color:${profile.labelColor}">Ce que ça dit de toi</div>
+        <p class="result-card-text">${profile.portrait}</p>
+      </div>
+      <div class="result-card-section">
+        <div class="result-card-label" style="color:${profile.labelColor}">Pourquoi c'est là</div>
+        <p class="result-card-text">${profile.why}</p>
+      </div>
+      <div class="result-card-section">
+        <div class="result-card-label" style="color:${profile.labelColor}">Un premier pas maintenant</div>
+        <p class="result-card-text">${profile.first_step}</p>
+      </div>
+    </div>
+
+    <div class="captation-card">
+      <h3 class="captation-title">Pour aller plus loin…</h3>
+      <p class="captation-sub">
+        Reçois ton profil complet + ${profile.magnet}.<br>
+        ${profile.magnet_detail}
+      </p>
+      <div class="form-group">
+        <input class="form-input" type="text" id="field-prenom" placeholder="Ton prénom" autocomplete="given-name">
+      </div>
+      <div class="form-group">
+        <input class="form-input" type="email" id="field-email" placeholder="Ton email" autocomplete="email">
+      </div>
+      <button class="btn-submit" onclick="submitForm()">Recevoir mon profil complet →</button>
+      <p class="captation-privacy">Pas de spam. Juste ce que tu attends.</p>
+    </div>
+
+    <div class="tagline-footer">
+      <p>Kiffe ta vie avant qu'elle ne te quitte. 🎭</p>
+    </div>
+  `;
+
+  document.getElementById('result-content').innerHTML = html;
+  showScreen('screen-result');
+}
+
+function submitForm() {
+  const prenom = document.getElementById('field-prenom').value.trim();
+  const email = document.getElementById('field-email').value.trim();
+
+  if (!prenom || !email) {
+    alert('Remplis ton prénom et ton email pour continuer.');
+    return;
+  }
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    alert('Vérifie ton adresse email.');
+    return;
+  }
+
+  // Here: connect to Systeme.io or your email platform
+  // For now: log and show thank you
+  console.log('Inscription:', { prenom, email, profile: profiles[scores.indexOf(Math.max(...scores))].badge });
+
+  showScreen('screen-thankyou');
+}
 </script>
 </body>
 </html>
