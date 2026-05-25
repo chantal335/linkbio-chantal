@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Quiz — Quel muscle émotionnel as-tu besoin de réveiller ?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --vert: #3A6B3E;
+    --cognac: #B5652A;
+    --or: #D4A843;
+    --encre: #1C1A17;
+    --creme: #F5EFE4;
+    --creme2: #EDE6D6;
+    --sauge: #7A9E6F;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--creme);
+    color: var(--encre);
+    min-height: 100vh;
+  }
+  .wrap {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--vert);
+    padding: 32px 20px 28px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+  }
+  .header-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--or);
+    background: rgba(212,168,67,0.15);
+    border: 1px solid rgba(212,168,67,0.35);
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+  .header-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(22px, 6vw, 28px);
+    font-weight: 500;
+    color: #fff;
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
+  .header-title em { color: var(--or); font-style: italic; }
+  .header-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.6;
+  }
+
+  /* PROGRESS */
+  .progress-wrap {
+    padding: 20px 0 8px;
+  }
+  .progress-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11.5px;
+    color: #8a7e73;
+    margin-bottom: 8px;
+  }
+  .progress-bar {
+    height: 4px;
+    background: var(--creme2);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--or);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  /* QUESTION */
+  .question-block {
+    padding: 24px 0 8px;
+    display: none;
+  }
+  .question-block.active { display: block; animation: fadeIn 0.4s ease; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .question-num {
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--cognac);
+    margin-bottom: 10px;
+  }
+  .question-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(18px, 4.5vw, 22px);
+    font-weight: 500;
+    color: var(--encre);
+    line-height: 1.4;
+    margin-bottom: 20px;
+  }
+
+  /* CHOICES */
+  .choices { display: flex; flex-direction: column; gap: 10px; }
+  .choice {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    background: #fff;
+    border: 1.5px solid rgba(181,101,42,0.15);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 6px rgba(28,26,23,0.04);
+  }
+  .choice:hover {
+    border-color: var(--cognac);
+    transform: translateX(3px);
+    box-shadow: 0 3px 14px rgba(28,26,23,0.09);
+  }
+  .choice.selected {
+    background: linear-gradient(135deg, #fff8f2 0%, #fef3e8 100%);
+    border-color: var(--cognac);
+    box-shadow: 0 3px 14px rgba(181,101,42,0.15);
+  }
+  .choice-letter {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--creme2);
+    border: 1px solid rgba(181,101,42,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--cognac);
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: all 0.2s;
+  }
+  .choice.selected .choice-letter {
+    background: var(--cognac);
+    color: #fff;
+    border-color: var(--cognac);
+  }
+  .choice-text {
+    font-size: 13.5px;
+    color: #4a4540;
+    line-height: 1.55;
+  }
+
+  /* NAV */
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 24px;
+    gap: 12px;
+  }
+  .btn-back {
+    font-size: 13px;
+    color: #8a7e73;
+    background: none;
+    border: 1px solid rgba(181,101,42,0.2);
+    border-radius: 8px;
+    padding: 10px 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-back:hover { border-color: var(--cognac); color: var(--cognac); }
+  .btn-next {
+    flex: 1;
+    max-width: 260px;
+    padding: 14px 20px;
+    background: var(--vert);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(58,107,62,0.25);
+  }
+  .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(58,107,62,0.3); }
+  .btn-next:disabled { background: #ccc; box-shadow: none; transform: none; cursor: not-allowed; }
+
+  /* RESULT */
+  .result-block {
+    display: none;
+    animation: fadeIn 0.5s ease;
+  }
+  .result-block.active { display: block; }
+
+  .result-header {
+    padding: 32px 24px 28px;
+    border-radius: 16px;
+    margin: 24px 0 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .result-emoji { font-size: 48px; margin-bottom: 12px; }
+  .result-label {
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    opacity: 0.75;
+  }
+  .result-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(22px, 6vw, 28px);
+    font-weight: 600;
+    line-height: 1.25;
+    margin-bottom: 8px;
+  }
+  .result-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(15px, 4vw, 18px);
+    opacity: 0.8;
+    line-height: 1.4;
+  }
+
+  .result-body {
+    background: #fff;
+    border-radius: 14px;
+    padding: 22px 20px;
+    margin-bottom: 14px;
+    border: 1px solid rgba(181,101,42,0.15);
+    box-shadow: 0 2px 8px rgba(28,26,23,0.05);
+  }
+  .result-body-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--cognac);
+    margin-bottom: 10px;
+    letter-spacing: 0.02em;
+  }
+  .result-body p {
+    font-size: 13.5px;
+    color: #4a4540;
+    line-height: 1.7;
+    margin-bottom: 10px;
+  }
+  .result-body p:last-child { margin-bottom: 0; }
+  .result-body strong { color: var(--encre); }
+
+  .result-step {
+    background: linear-gradient(135deg, #eef4ee 0%, #e8f0e2 100%);
+    border: 1px solid rgba(58,107,62,0.2);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+  .result-step-title {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--vert);
+    margin-bottom: 8px;
+  }
+  .result-step p {
+    font-size: 13px;
+    color: #3a4a3a;
+    line-height: 1.65;
+  }
+
+  .cta-result {
+    display: block;
+    width: 100%;
+    padding: 18px 20px;
+    background: var(--or);
+    border-radius: 12px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--encre);
+    margin-bottom: 12px;
+    box-shadow: 0 4px 16px rgba(212,168,67,0.35);
+    transition: all 0.2s;
+  }
+  .cta-result:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212,168,67,0.4); }
+
+  .cta-secondary {
+    display: block;
+    width: 100%;
+    padding: 14px 20px;
+    background: transparent;
+    border: 1.5px solid rgba(58,107,62,0.3);
+    border-radius: 12px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 13.5px;
+    color: var(--vert);
+    transition: all 0.2s;
+    margin-bottom: 24px;
+  }
+  .cta-secondary:hover { border-color: var(--vert); background: rgba(58,107,62,0.05); }
+
+  .result-footer {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: #a09485;
+    padding-top: 16px;
+    border-top: 1px solid rgba(212,168,67,0.2);
+  }
+
+  @media (max-width: 400px) {
+    .wrap { padding: 0 16px 60px; }
+    .header { padding: 28px 16px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-badge">✦ Quiz gratuit</div>
+  <div class="header-title">Quel muscle émotionnel<br>as-tu besoin de <em>réveiller</em> ?</div>
+  <div class="header-sub">7 questions · réponse immédiate · pas d'analyse — juste ce que tu ressens</div>
+</div>
+
+<div class="wrap">
+
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-top">
+      <span id="progressLabel">Question 1 sur 7</span>
+      <span id="progressPct">14%</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width:14%"></div>
+    </div>
+  </div>
+
+  <!-- Q1 -->
+  <div class="question-block active" id="q1">
+    <div class="question-num">Question 1 · 7</div>
+    <div class="question-text">Le matin, quand tu penses à ta journée, qu'est-ce qui se passe en toi ?</div>
+    <div class="choices">
+      <div class="choice" onclick="select(1,1,'E')">
+        <div class="choice-letter">A</div>
+        <div class="choice-text">Une petite étincelle — quelque chose a envie de commencer</div>
+      </div>
+      <div class="choice" onclick="select(1,2,'J')">
+        <div class="choice-letter">B</div>
+        <div class="choice-text">Un vague, une grisaille — rien ne semble vraiment m'appeler</div>
+      </div>
+      <div class="choice" onclick="select(1,3,'D')">
+        <div class="choice-letter">C</div>
+        <div class="choice-text">Une liste de choses à faire, sans vraiment savoir par où commencer</div>
+      </div>
+      <div class="choice" onclick="select(1,4,'S')">
+        <div class="choice-letter">D</div>
+        <div class="choice-text">Un fond d'inquiétude — est-ce que je vais être à la hauteur ?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="question-block" id="q2">
+    <div class="question-num">Question 2 · 7</div>
+    <div class="question-text">Quand quelque chose te plaît vraiment, comment tu le vis ?</div>
+    <div class="choices">
+      <div class="choice" onclick="select(2,1,'E')">
+        <div class="choice-letter">A</div>
+        <div class="choice-text">J'ai envie de tout partager, ça déborde — je m'anime facilement</div>
+      </div>
+      <div class="choice" onclick="select(2,2,'J')">
+        <div class="choice-letter">B</div>
+        <div class="choice-text">Je ressens quelque chose, mais c'est vite étouffé, je n'ose pas trop le montrer</div>
+      </div>
+      <div class="choice" onclick="select(2,3,'D')">
+        <div class="choice-letter">C</div>
+        <div class="choice-text">Je note mentalement, je planifie comment faire plus de ça</div>
+      </div>
+      <div class="choice" onclick="select(2,4,'S')">
+        <div class="choice-letter">D</div>
+        <div class="choice-text">Je me demande si j'ai vraiment le droit de me réjouir autant</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="question-block" id="q3">
+    <div class="question-num">Question 3 · 7</div>
+    <div class="question-text">Face à un obstacle, qu'est-ce qui se passe d'abord dans ton corps ?</div>
+    <div class="choices">
+      <div class="choice" onclick="select(3,1,'D')">
+        <div class="choice-letter">A</div>
+        <div class="choice-text">Une contraction — comme si quelque chose se bloquait, hésite à avancer</div>
+      </div>
+      <div class="choice" onclick="select(3,2,'E')">
+        <div class="choice-letter">B</div>
+        <div class="choice-text">Un regain d'énergie — j'ai envie de trouver une solution</div>
+      </div>
+      <div class="choice" onclick="select(3,3,'J')">
+        <div class="choice-letter">C</div>
+        <div class="choice-text">Une lassitude — encore un truc qui ne marche pas</div>
+      </div>
+      <div class="choice" onclick="select(3,4,'S')">
+        <div class="choice-letter">D</div>
+        <div class="choice-text">Une peur diffuse — et si je n'y arrivais pas ?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="question-block" id="q4">
+    <div class="question-num">Question 4 · 7</div>
+    <div class="question-text">Quand quelqu'un te fait un compliment sincère, tu…</div>
+    <div class="choices">
+      <div class="choice" onclick="select(4,1,'S')">
+        <div class="choice-letter">A</div>
+        <div class="choice-text">Le minimises ou le détournes — "Oh c'est rien, n'importe qui aurait fait pareil"</div>
+      </div>
+      <div class="choice" onclick="select(4,2,'J')">
+        <div class="choice-letter">B</div>
+        <div class="choice-text">Le reçois avec un sourire, mais tu n'y crois pas vraiment</div>
+      </div>
+      <div class="choice" onclick="select(4,3,'D')">
+        <div class="choice-letter">C</div>
+        <div class="choice-text">L'enregistres et tu continues — tu as encore beaucoup à faire</div>
+      </div>
+      <div class="choice" onclick="select(4,4,'E')">
+        <div class="choice-letter">D</div>
+        <div class="choice-text">Le reçois pleinement — ça t'encourage à aller encore plus loin</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="question-block" id="q5">
+    <div class="question-num">Question 5 · 7</div>
+    <div class="question-text">Ce soir, après une longue journée, qu'est-ce qui te ressourcerait vraiment ?</div>
+    <div class="choices">
+      <div class="choice" onclick="select(5,1,'E')">
+        <div class="choice-letter">A</div>
+        <div class="choice-text">Faire quelque chose qui me passionne — j'ai besoin de m'y mettre</div>
+      </div>
+      <div class="choice" onclick="select(5,2,'J')">
+        <div class="choice-letter">B</div>
+        <div class="choice-text">Rire, danser, quelque chose de léger — j'en ai tellement besoin</div>
+      </div>
+      <div class="choice" onclick="select(5,3,'D')">
+        <div class="choice-letter">C</div>
+        <div class="choice-text">Avancer sur un projet qui me tient à cœur — sentir que je progresse</div>
+      </div>
+      <div class="choice" onclick="select(5,4,'S')">
+        <div class="choice-letter">D</div>
+        <div class="choice-text">Être seule, au calme — me retrouver sans avoir à me justifier</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="question-block" id="q6">
+    <div class="question-num">Question 6 · 7</div>
+    <div class="question-text">Si tu devais décrire ton rapport à toi-même en ce moment, ce serait…</div>
+    <div class="choices">
+      <div class="choice" onclick="select(6,1,'S')">
+        <div class="choice-letter">A</div>
+        <div class="choice-text">Exigeante — je ne me pardonne pas facilement les erreurs</div>
+      </div>
+      <div class="choice" onclick="select(6,2,'J')">
+        <div class="choice-letter">B</div>
+        <div class="choice-text">Distante — je m'observe sans vraiment me sentir</div>
+      </div>
+      <div class="choice" onclick="select(6,3,'D')">
+        <div class="choice-letter">C</div>
+        <div class="choice-text">En attente — je sais ce que je veux, mais quelque chose résiste</div>
+      </div>
+      <div class="choice" onclick="select(6,4,'E')">
+        <div class="choice-letter">D</div>
+        <div class="choice-text">En mouvement — j'ai des envies, mais elles manquent parfois de carburant</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="question-block" id="q7">
+    <div class="question-num">Question 7 · 7</div>
+    <div class="question-text">La phrase qui résonne le plus en toi en ce moment ?</div>
+    <div class="choices">
+      <div class="choice" onclick="select(7,1,'E')">
+        <div class="choice-letter">A</div>
+        <div class="choice-text">"Je veux retrouver ce feu — cette envie de me lever le matin avec hâte"</div>
+      </div>
+      <div class="choice" onclick="select(7,2,'J')">
+        <div class="choice-letter">B</div>
+        <div class="choice-text">"Je voudrais juste me sentir légère — rire sans raison, être là vraiment"</div>
+      </div>
+      <div class="choice" onclick="select(7,3,'D')">
+        <div class="choice-letter">C</div>
+        <div class="choice-text">"Je sais ce que je veux. Mais entre savoir et faire, il y a un gouffre"</div>
+      </div>
+      <div class="choice" onclick="select(7,4,'S')">
+        <div class="choice-letter">D</div>
+        <div class="choice-text">"J'ai besoin de me sentir légitime — d'occuper ma place sans m'excuser"</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <div class="nav" id="navButtons">
+    <button class="btn-back" id="btnBack" onclick="goBack()" style="display:none;">← Retour</button>
+    <button class="btn-next" id="btnNext" onclick="goNext()" disabled>Continuer →</button>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="result-block" id="results"></div>
+
+</div>
+
+<script>
+  const answers = {};
+  let current = 1;
+  const total = 7;
+
+  const profiles = {
+    E: {
+      emoji: '🔥',
+      label: 'Muscle endormi',
+      title: "Ton enthousiasme\ns'est mis en veille",
+      subtitle: "Il est là — juste en attente d'une étincelle",
+      bg: 'linear-gradient(135deg, #3A6B3E 0%, #2d5230 100%)',
+      color: '#fff',
+      labelColor: 'rgba(212,168,67,0.9)',
+      portrait: "Tu as de l'élan — parfois même beaucoup. Mais quelque chose l'étouffe avant qu'il ne prenne vraiment feu. Tu te lèves le matin sans cette hâte que tu aimerais ressentir. Pas d'épuisement profond — juste un feu qui brûle trop bas.",
+      why: "L'enthousiasme n'est pas une humeur. C'est un muscle — une énergie qui circule dans le corps quand tu es alignée avec ce qui compte vraiment pour toi. Quand il dort, c'est souvent parce que tu fais beaucoup de choses qui ne te nourrissent pas vraiment.",
+      first_step: "<strong>Rappelle-toi la dernière fois que tu as perdu la notion du temps.</strong> Qu'est-ce que tu faisais ? Pose une main sur ton sternum, respire, et reviens à cette sensation. C'est là que vit ton enthousiasme.",
+    },
+    J: {
+      emoji: '✨',
+      label: 'Muscle endormi',
+      title: "Ta joie s'est\nperdue en chemin",
+      subtitle: "Elle n'a pas disparu — elle attend d'être retrouvée",
+      bg: 'linear-gradient(135deg, #D4A843 0%, #b88e2f 100%)',
+      color: '#1C1A17',
+      labelColor: '#3A6B3E',
+      portrait: "Tu fonctionnes. Tu gères. Et pourtant, quelque chose de léger manque. La joie spontanée — celle qui n'a pas besoin de raison — s'est effacée doucement. Tu te souviens de la ressentir, mais tu ne sais plus comment y revenir.",
+      why: "La joie n'est pas un état mental. C'est une vibration dans le corps — une légèreté physique qui surgit quand tu es présente à ce qui est beau, maintenant. Elle s'endort quand tu es trop dans ta tête, trop occupée à gérer.",
+      first_step: "<strong>Fais quelque chose d'inutile et de plaisant dans les prochaines 24 heures.</strong> Chanter, danser seule, regarder le ciel. Sans objectif. Juste pour ça. C'est la première adresse que tu laisses à ta joie pour te retrouver.",
+    },
+    D: {
+      emoji: '⚡',
+      label: 'Muscle endormi',
+      title: "Ta détermination\ncherche son appui",
+      subtitle: "Tu sais où tu veux aller — mais le pas manque",
+      bg: 'linear-gradient(135deg, #B5652A 0%, #8f4e20 100%)',
+      color: '#fff',
+      labelColor: 'rgba(212,168,67,0.9)',
+      portrait: "Tu vois clairement ce que tu veux. Tu l'as même planifié. Mais entre l'intention et l'action, quelque chose résiste. Ce n'est pas le manque d'envie — c'est comme si le corps n'avait pas reçu le signal de départ.",
+      why: "La détermination n'est pas une question de volonté. C'est une énergie physique — une certitude qui se sent dans les jambes, le ventre, le souffle. Quand elle vacille, c'est souvent parce qu'elle cherche un ancrage dans le corps, pas dans la tête.",
+      first_step: "<strong>Prends une décision aujourd'hui — même petite — et honore-la immédiatement.</strong> Pas demain. Maintenant. La détermination se construit par des actes concrets, pas par des convictions.",
+    },
+    S: {
+      emoji: '🌿',
+      label: 'Muscle endormi',
+      title: "Ton estime de toi\ns'est effacée doucement",
+      subtitle: "Tu as tout ce qu'il faut — tu l'as juste oublié",
+      bg: 'linear-gradient(135deg, #7A9E6F 0%, #5a7d50 100%)',
+      color: '#fff',
+      labelColor: 'rgba(212,168,67,0.9)',
+      portrait: "Tu fais, tu donnes, tu t'adaptes — souvent au détriment de toi-même. Quelque part, tu cherches la validation que tu ne t'accordes pas. Ce n'est pas un manque de caractère — c'est une croyance ancienne, inscrite dans le corps.",
+      why: "L'estime de soi n'est pas une conviction mentale. C'est une sensation physique — celle d'avoir le droit d'occuper de l'espace, d'exister pleinement, sans s'excuser. Quand elle s'efface, c'est le corps qui a appris à se faire petit.",
+      first_step: "<strong>Tiens-toi droite et prends plus de place qu'à l'habitude.</strong> Élargis tes épaules. Respire dans ta poitrine. Remarque le malaise — puis reste là quand même. C'est l'estime de soi qui commence.",
+    }
+  };
+
+  function select(q, choice, profile) {
+    const block = document.getElementById('q' + q);
+    block.querySelectorAll('.choice').forEach(c => c.classList.remove('selected'));
+    block.querySelectorAll('.choice')[choice - 1].classList.add('selected');
+    answers[q] = profile;
+    document.getElementById('btnNext').disabled = false;
+  }
+
+  function goNext() {
+    if (current < total) {
+      document.getElementById('q' + current).classList.remove('active');
+      current++;
+      document.getElementById('q' + current).classList.add('active');
+      document.getElementById('btnNext').disabled = !answers[current];
+      document.getElementById('btnBack').style.display = 'block';
+      if (current === total) document.getElementById('btnNext').textContent = 'Voir mon résultat →';
+      updateProgress();
+    } else {
+      showResult();
+    }
+  }
+
+  function goBack() {
+    if (current > 1) {
+      document.getElementById('q' + current).classList.remove('active');
+      current--;
+      document.getElementById('q' + current).classList.add('active');
+      document.getElementById('btnNext').disabled = false;
+      document.getElementById('btnNext').textContent = current === total ? 'Voir mon résultat →' : 'Continuer →';
+      if (current === 1) document.getElementById('btnBack').style.display = 'none';
+      updateProgress();
+    }
+  }
+
+  function updateProgress() {
+    const pct = Math.round((current / total) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressLabel').textContent = 'Question ' + current + ' sur ' + total;
+    document.getElementById('progressPct').textContent = pct + '%';
+  }
+
+  function showResult() {
+    // Count scores
+    const scores = { E: 0, J: 0, D: 0, S: 0 };
+    Object.values(answers).forEach(a => scores[a]++);
+    const dominant = Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
+    const p = profiles[dominant];
+
+    document.getElementById('progressWrap').style.display = 'none';
+    document.querySelectorAll('.question-block').forEach(b => b.style.display = 'none');
+    document.getElementById('navButtons').style.display = 'none';
+
+    const titleLines = p.title.split('\n');
+
+    document.getElementById('results').innerHTML = `
+      <div class="result-header" style="background:${p.bg};color:${p.color};">
+        <div class="result-emoji">${p.emoji}</div>
+        <div class="result-label" style="color:${p.labelColor};">${p.label}</div>
+        <div class="result-title" style="color:${p.color};">${titleLines[0]}<br>${titleLines[1]}</div>
+        <div class="result-subtitle" style="color:${p.color};">${p.subtitle}</div>
+      </div>
+
+      <div class="result-body">
+        <div class="result-body-title">Ce que ça dit de toi</div>
+        <p>${p.portrait}</p>
+        <p>${p.why}</p>
+      </div>
+
+      <div class="result-step">
+        <div class="result-step-title">✦ Premier pas concret</div>
+        <p>${p.first_step}</p>
+      </div>
+
+      <a class="cta-result" href="LIEN_FORMATION">
+        Découvrir la formation L'Essence de Soi en Jeu →
+      </a>
+      <a class="cta-secondary" href="LIEN_ATELIER_GRATUIT">
+        Rejoindre l'atelier gratuit du mois
+      </a>
+
+      <div class="result-footer">
+        Kiffe ta vie avant qu'elle ne te quitte.<br>
+        <span style="font-style:normal;font-size:11px;color:#bbb;">© Chantal Brochard · L'Essence de Soi en Jeu</span>
+      </div>
+    `;
+
+    document.getElementById('results').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
