@@ -683,7 +683,7 @@
   <!-- ══ SCREEN 1 — INTRO ══ -->
   <div id="screen-intro" class="screen active">
     <div class="intro-hero">
-      <div class="intro-eyebrow">🎭 Quiz émotionnel</div>
+      <div class="intro-eyebrow">Quiz émotionnel</div>
       <h1 class="intro-title">
         Quel muscle émotionnel<br>
         as-tu besoin de<br>
@@ -717,7 +717,6 @@
       <p class="intro-card-title">Ce quiz est fait pour toi si…</p>
       <ul>
         <li>Tu fonctionnes — mais tu ne ressens plus grand chose de vrai</li>
-        <li>Tu as essayé le développement personnel, mais quelque chose résiste encore</li>
         <li>Tu sens qu'il y a quelque chose à réveiller en toi, mais tu ne sais pas quoi</li>
         <li>Tu attends… quelque chose. Sans savoir exactement quoi.</li>
       </ul>
@@ -971,7 +970,7 @@ function renderQuestion() {
         `).join('')}
       </div>
       <button class="btn-next" id="btn-next" onclick="nextQuestion()">
-        ${currentQ < questions.length - 1 ? 'Question suivante' : 'Voir mon profil'}
+        ${currentQ < questions.length - 1 ? 'Question suivante' : 'Ton profil t\'attend'}
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
@@ -1019,38 +1018,10 @@ function showResult() {
   const profile = profiles[profileIdx];
 
   const html = `
-    <div class="result-header">
-      <div class="result-eyebrow">Ton profil</div>
-      <div class="result-profile-badge" style="background:${profile.badgeBg}; color:${profile.badgeColor}; border: 1px solid ${profile.badgeColor}40">
-        ${profile.badge}
-      </div>
-      <h2 class="result-title">${profile.title}</h2>
-    </div>
-
-    <div class="result-quote" style="background:${profile.quoteBg}; border-left: 3px solid ${profile.badgeColor}">
-      ${profile.quote}
-    </div>
-
-    <div class="result-card">
-      <div class="result-card-section">
-        <div class="result-card-label" style="color:${profile.labelColor}">Ce que ça dit de toi</div>
-        <p class="result-card-text">${profile.portrait}</p>
-      </div>
-      <div class="result-card-section">
-        <div class="result-card-label" style="color:${profile.labelColor}">Pourquoi c'est là</div>
-        <p class="result-card-text">${profile.why}</p>
-      </div>
-      <div class="result-card-section">
-        <div class="result-card-label" style="color:${profile.labelColor}">Un premier pas maintenant</div>
-        <p class="result-card-text">${profile.first_step}</p>
-      </div>
-    </div>
-
     <div class="captation-card">
-      <h3 class="captation-title">Pour aller plus loin…</h3>
+      <h3 class="captation-title">Ton profil est prêt.</h3>
       <p class="captation-sub">
-        Reçois ton profil complet + ${profile.magnet}.<br>
-        ${profile.magnet_detail}
+        Il n'attend plus que ton email pour te parvenir.
       </p>
       <div class="form-group">
         <input class="form-input" type="text" id="field-prenom" placeholder="Ton prénom" autocomplete="given-name">
@@ -1058,8 +1029,8 @@ function showResult() {
       <div class="form-group">
         <input class="form-input" type="email" id="field-email" placeholder="Ton email" autocomplete="email">
       </div>
-      <button class="btn-submit" onclick="submitForm()">Recevoir mon profil complet →</button>
-      <p class="captation-privacy">Pas de spam. Juste ce que tu attends.</p>
+      <button class="btn-submit" onclick="submitForm()">Recevoir mon profil →</button>
+      <p class="captation-privacy">Aucun spam. Juste ton profil.</p>
     </div>
 
     <div class="tagline-footer">
