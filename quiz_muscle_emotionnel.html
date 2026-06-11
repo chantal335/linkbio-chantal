@@ -1046,7 +1046,7 @@ function showResult() {
   showScreen('screen-result');
 }
 
-function submitForm() {
+async function submitForm() {
   const prenom = document.getElementById('field-prenom').value.trim();
   const email = document.getElementById('field-email').value.trim();
 
@@ -1060,9 +1060,20 @@ function submitForm() {
     return;
   }
 
-  // Here: connect to Systeme.io or your email platform
-  // For now: log and show thank you
-  console.log('Inscription:', { prenom, email, profile: profiles[scores.indexOf(Math.max(...scores))].badge });
+  // Submit to Systeme.io tunnel
+  try {
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('first_name', prenom);
+
+    await fetch('https://www.lessencedesoienjeu.com/870588bf', {
+      method: 'POST',
+      mode: 'no-cors',
+      body: formData
+    });
+  } catch(e) {
+    console.log('Submission error:', e);
+  }
 
   showScreen('screen-thankyou');
 }
