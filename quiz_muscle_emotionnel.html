@@ -1027,14 +1027,8 @@ function showResult() {
       <p class="captation-sub">
         Les 4 muscles émotionnels et ce que le tien révèle de toi — dans ta boîte mail.
       </p>
-      <div class="form-group">
-        <input class="form-input" type="text" id="field-prenom" placeholder="Ton prénom" autocomplete="given-name">
-      </div>
-      <div class="form-group">
-        <input class="form-input" type="email" id="field-email" placeholder="Ton email" autocomplete="email">
-      </div>
-      <button class="btn-submit" onclick="submitForm()">Recevoir mon profil →</button>
-      <p class="captation-privacy">Aucun spam. Juste ton profil.</p>
+      <div id="systemeio-form-container"></div>
+      <p class="captation-privacy" style="margin-top:12px;">Aucun spam. Juste ton profil.</p>
     </div>
 
     <div class="tagline-footer">
@@ -1078,5 +1072,8 @@ async function submitForm() {
   showScreen('screen-thankyou');
 }
 </script>
+<div id="systemeio-script-holder" style="display:none">
+  <script id="form-script-tag-24366743" src="https://www.lessencedesoienjeu.com/public/remote/page/4169901579f92260e6d971b942e9cda1b2376852.js"></script>
+</div>
 </body>
 </html>
