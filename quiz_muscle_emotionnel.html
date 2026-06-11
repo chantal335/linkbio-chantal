@@ -1027,7 +1027,20 @@ function showResult() {
       <p class="captation-sub">
         Les 4 muscles émotionnels et ce que le tien révèle de toi — dans ta boîte mail.
       </p>
-      <div id="systemeio-form-container"></div>
+      <form method="post" action="https://systeme.io/embedded/41699015/subscription" style="margin-top:16px;">
+        <div style="margin-bottom:10px;">
+          <input type="text" name="first_name" placeholder="Ton prénom" required
+            style="width:100%; padding:13px 16px; border-radius:10px; border:1.5px solid rgba(255,255,255,0.2); background:rgba(255,255,255,0.12); color:white; font-family:DM Sans,sans-serif; font-size:0.9rem; outline:none;">
+        </div>
+        <div style="margin-bottom:10px;">
+          <input type="email" name="email" placeholder="Ton email" required
+            style="width:100%; padding:13px 16px; border-radius:10px; border:1.5px solid rgba(255,255,255,0.2); background:rgba(255,255,255,0.12); color:white; font-family:DM Sans,sans-serif; font-size:0.9rem; outline:none;">
+        </div>
+        <button type="submit"
+          style="width:100%; padding:15px; background:#D4A843; color:#1C1C1A; border:none; border-radius:10px; font-family:DM Sans,sans-serif; font-size:0.9rem; font-weight:500; cursor:pointer;">
+          Recevoir mon profil →
+        </button>
+      </form>
       <p class="captation-privacy" style="margin-top:12px;">Aucun spam. Juste ton profil.</p>
     </div>
 
@@ -1072,8 +1085,5 @@ async function submitForm() {
   showScreen('screen-thankyou');
 }
 </script>
-<div id="systemeio-script-holder" style="display:none">
-  <script id="form-script-tag-24366743" src="https://www.lessencedesoienjeu.com/public/remote/page/4169901579f92260e6d971b942e9cda1b2376852.js"></script>
-</div>
 </body>
 </html>
