@@ -1018,10 +1018,14 @@ function showResult() {
   const profile = profiles[profileIdx];
 
   const html = `
+    <div style="text-align:center; padding: 32px 0 8px;">
+      <p style="font-size:0.72rem; letter-spacing:0.18em; text-transform:uppercase; color:#6B6560; font-family:'DM Sans',sans-serif; margin-bottom:12px;">Ton profil</p>
+      <h2 style="font-family:'Cormorant Garamond',serif; font-size:1.9rem; font-weight:300; color:#1C1C1A; line-height:1.2;">${profile.title}</h2>
+    </div>
     <div class="captation-card">
-      <h3 class="captation-title">Ton profil est prêt.</h3>
+      <h3 class="captation-title">Ton profil complet t'attend.</h3>
       <p class="captation-sub">
-        Il n'attend plus que ton email pour te parvenir.
+        Les 4 muscles émotionnels et ce que le tien révèle de toi — dans ta boîte mail.
       </p>
       <div class="form-group">
         <input class="form-input" type="text" id="field-prenom" placeholder="Ton prénom" autocomplete="given-name">
