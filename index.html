@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L'Essence de Soi en Jeu — Chantal Brochard</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400;1,600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#FAF6EF;font-family:'Jost',sans-serif;color:#3a3a3a;}
+.container{max-width:520px;margin:0 auto;background:#FAF6EF;}
+.hero{position:relative;width:100%;}
+.hero img{width:100%;display:block;}
+.hero-overlay{position:absolute;bottom:0;left:0;right:0;padding:2rem 1.5rem 1.5rem;background:linear-gradient(to top, rgba(250,246,239,0.95) 0%, rgba(250,246,239,0.6) 40%, transparent 100%);text-align:center;}
+.brand{font-family:'Cormorant Garamond',serif;font-size:2.3rem;font-weight:600;color:#3A6B3E;letter-spacing:0.08em;line-height:1;}
+.brand-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.5rem;color:#B5652A;margin-top:0.2rem;}
+.signature{text-align:center;padding:1.2rem 2rem 0;font-size:1rem;color:#6a6a6a;line-height:1.5;}
+.divider{width:60px;height:2px;background:#D4A843;margin:1.8rem auto;}
+.accroche{text-align:center;padding:0 1.8rem;}
+.accroche-q{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:#3A6B3E;line-height:1.4;margin-bottom:1.2rem;}
+.accroche-q em{font-style:italic;}
+.accroche-q .hl{font-weight:600;color:#3A6B3E;}
+.accroche-txt{font-size:1.05rem;color:#5a5a5a;line-height:1.6;}
+.accroche-txt em{font-style:italic;}
+.clown{margin:1.5rem 1.5rem 0;background:rgba(160,82,45,0.09);border-left:4px solid #A0522D;border-radius:0 8px 8px 0;padding:1rem 1.2rem;}
+.clown p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:#A0522D;line-height:1.4;}
+.star-sep{display:flex;align-items:center;justify-content:center;gap:1rem;margin:2rem 1.5rem;}
+.star-sep::before,.star-sep::after{content:'';height:1px;background:rgba(212,168,67,0.4);flex:1;}
+.star-sep span{color:#D4A843;font-size:1.2rem;}
+.card{margin:0 1.2rem 1.5rem;background:#3A6B3E;border-radius:20px;padding:2rem 1.8rem;position:relative;overflow:hidden;}
+.card::after{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.05);}
+.card-badge{display:inline-block;border:1px solid rgba(212,168,67,0.5);border-radius:100px;padding:0.4rem 1rem;font-size:0.8rem;letter-spacing:0.12em;color:#D4A843;font-weight:500;margin-bottom:1.2rem;position:relative;z-index:2;}
+.card-title{font-family:'Cormorant Garamond',serif;font-size:2rem;color:#FAF6EF;line-height:1.15;margin-bottom:0.3rem;position:relative;z-index:2;}
+.card-title .accent{color:#D4A843;font-style:italic;}
+.card-desc{font-size:1rem;color:rgba(245,239,228,0.85);line-height:1.5;margin-bottom:1.3rem;position:relative;z-index:2;}
+.card-list{list-style:none;margin-bottom:1.3rem;position:relative;z-index:2;}
+.card-list li{display:flex;gap:0.7rem;align-items:flex-start;margin-bottom:0.7rem;font-size:0.98rem;color:rgba(245,239,228,0.9);line-height:1.4;}
+.card-list li .star{color:#D4A843;flex-shrink:0;}
+.card-cta{display:block;background:#D4A843;color:#3A6B3E;text-align:center;text-decoration:none;font-weight:500;font-size:1.1rem;padding:1rem;border-radius:12px;position:relative;z-index:2;transition:transform 0.15s;}
+.card-cta:active{transform:scale(0.98);}
+.card-hr{height:1px;background:rgba(245,239,228,0.2);margin:1.3rem 0;position:relative;z-index:2;}
+.card-forwho{position:relative;z-index:2;}
+.card-forwho-t{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;color:rgba(245,239,228,0.75);margin-bottom:0.8rem;}
+.card-forwho li{display:flex;gap:0.6rem;align-items:flex-start;margin-bottom:0.7rem;font-size:0.95rem;color:rgba(245,239,228,0.85);line-height:1.45;list-style:none;}
+.card-forwho li::before{content:'·';color:#D4A843;font-weight:bold;flex-shrink:0;}
+.footer{text-align:center;padding:1rem 2rem 3rem;}
+.footer-sig{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.2rem;color:#A0522D;}
+</style></head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <img src="photo.png" alt="Chantal Brochard">
+    <div class="hero-overlay">
+      <div class="brand">L'ESSENCE</div>
+      <div class="brand-sub">de Soi en Jeu</div>
+    </div>
+  </div>
+
+  <div class="signature">Je mets du jeu dans le sérieux et du corps dans tout le reste.</div>
+
+  <div class="divider"></div>
+
+  <div class="accroche">
+    <div class="accroche-q"><em>Tu vis ta vie —</em><br>ou tu la <span class="hl">subis en souriant</span> ?</div>
+    <div class="accroche-txt">Tu fais tout bien. Tu coches les cases. Et pourtant, quelque chose en toi attend encore de vraiment <em>commencer</em>.</div>
+  </div>
+
+  <div class="clown">
+    <p>Coach neuro-émotionnelle &amp; un peu clown — parce que c'est souvent là que ça se décoince.</p>
+  </div>
+
+  <div class="star-sep"><span>✦</span></div>
+
+  <div class="card">
+    <div class="card-badge">📖 EBOOK OFFERT</div>
+    <div class="card-title">Et si le sérieux t'avait <span class="accent">coûté quelque chose ?</span></div>
+    <div class="card-desc">5 déclics pour retrouver ce qui est vivant en toi.</div>
+    <ul class="card-list">
+      <li><span class="star">✦</span> 10 pages qui font mouche — à lire en une pause café</li>
+      <li><span class="star">✦</span> 5 prises de conscience concrètes</li>
+      <li><span class="star">✦</span> Reçu directement dans ta boîte mail</li>
+    </ul>
+    <a class="card-cta" href="https://www.lessencedesoienjeu.com/declics">Reçois tes 5 déclics offerts →</a>
+  </div>
+
+  <div class="star-sep"><span>✦</span></div>
+
+  <div class="card">
+    <div class="card-badge">✦ QUIZ GRATUIT</div>
+    <div class="card-title">Tu fonctionnes.<br>Mais est-ce que <span class="accent">tu vis ?</span></div>
+    <div class="card-desc">Découvre quel muscle émotionnel tu as besoin de réveiller — en 3 minutes.</div>
+    <ul class="card-list">
+      <li><span class="star">✦</span> 7 questions — réponse immédiate</li>
+      <li><span class="star">✦</span> Ton profil personnalisé + un premier pas concret</li>
+      <li><span class="star">✦</span> Pas d'analyse — juste ce que tu ressens</li>
+    </ul>
+    <div class="card-hr"></div>
+    <div class="card-forwho">
+      <div class="card-forwho-t">Ce quiz est fait pour toi si...</div>
+      <ul>
+        <li>Tu fonctionnes — mais tu ne ressens plus grand chose de vrai.</li>
+        <li>Tu sens qu'il y a quelque chose à réveiller en toi, mais tu ne sais pas quoi.</li>
+        <li>Tu attends… quelque chose. Sans savoir exactement quoi.</li>
+      </ul>
+    </div>
+    <a class="card-cta" href="https://chantal335.github.io/linkbio-chantal/quiz_muscle_emotionnel.html" style="margin-top:1.3rem;">Faire le quiz maintenant →</a>
+  </div>
+
+  <div class="footer">
+    <div class="footer-sig">Kiffe ta vie avant qu'elle ne te quitte.</div>
+  </div>
+
+</div>
+</body></html>
